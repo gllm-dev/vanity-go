@@ -1,0 +1,53 @@
+# vanity-go systemd service file
+# Copy this file to /etc/systemd/system/vanity-go.service
+# Then run:
+#   sudo systemctl daemon-reload
+#   sudo systemctl enable vanity-go
+#   sudo systemctl start vanity-go
+
+[Unit]
+Description=Go Vanity Import Server
+Documentation=https://github.com/gllm-dev/vanity-go
+After=network.target
+
+[Service]
+Type=simple
+User=vanity-go
+Group=vanity-go
+WorkingDirectory=/opt/vanity-go
+
+# Environment variables
+Environment="VANITY_DOMAIN=go.gllm.dev"
+Environment="VANITY_REPOSITORY=https://github.com/gllm-dev"
+
+# Optional: Load environment from file
+# EnvironmentFile=/etc/vanity-go/config.env
+
+# Start command
+ExecStart=/opt/vanity-go/vanity-go
+
+# Restart policy
+Restart=always
+RestartSec=5
+
+# Security settings
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+
+# Resource limits
+LimitNOFILE=65536
+LimitNPROC=512
+
+# Logging
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=vanity-go
+
+[Install]
+WantedBy=multi-user.target

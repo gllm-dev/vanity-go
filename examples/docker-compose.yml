@@ -1,0 +1,50 @@
+version: '3.8'
+
+services:
+  vanity-go:
+    image: ghcr.io/gllm-dev/vanity-go:latest
+    container_name: vanity-go
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    environment:
+      # Required: Your vanity domain
+      - VANITY_DOMAIN=go.gllm.dev
+      # Required: Your repository base URL
+      - VANITY_REPOSITORY=https://github.com/gllm-dev
+    # Optional: Use .env file for configuration
+    # env_file:
+    #   - .env
+    
+    # Optional: Health check
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:8080/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+    # Optional: Resource limits
+    # deploy:
+    #   resources:
+    #     limits:
+    #       cpus: '0.5'
+    #       memory: 128M
+    #     reservations:
+    #       cpus: '0.1'
+    #       memory: 64M
+
+# Optional: If you want to use Traefik as reverse proxy
+# networks:
+#   traefik:
+#     external: true
+# 
+# services:
+#   vanity-go:
+#     networks:
+#       - traefik
+#     labels:
+#       - "traefik.enable=true"
+#       - "traefik.http.routers.vanity-go.rule=Host(`go.gllm.dev`)"
+#       - "traefik.http.routers.vanity-go.entrypoints=websecure"
+#       - "traefik.http.routers.vanity-go.tls.certresolver=letsencrypt"
