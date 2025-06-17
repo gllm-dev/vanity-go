@@ -3,7 +3,7 @@ RUN apk add --no-cache ca-certificates git openssh-client
 
 WORKDIR /app
 COPY . .
-RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags "-w -s" -o app main.go
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags "-w -s" -o app ./cmd
 
 FROM scratch
 WORKDIR /app
